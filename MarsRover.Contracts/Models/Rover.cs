@@ -11,13 +11,6 @@ namespace MarsRover.Contracts.Models
         public Command[] Commands { get; set; }
         public List<RoverHistory> RoverHistory { get; set; }
 
-        public Rover(int x, int y, Heading heading, Plateau plateau)
-        {
-            Location = new Location(x, y, heading);
-            Plateau = plateau;
-            RoverHistory = new List<RoverHistory>();
-        }
-
         public Rover(Location location, Plateau plateau)
         {
             Location = location;
