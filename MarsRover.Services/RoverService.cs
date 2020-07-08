@@ -10,63 +10,34 @@ namespace MarsRover.Services
 {
     public class RoverService : IRoverService
     {
-        public Rover CreateRover(string coordinateString, Plateau plateau)
+        public RoverCreateResult CreateRover(string coordinateString, Plateau plateau)
         {
+            var roverResult = new RoverCreateResult();
+
             if (plateau == null)
             {
-                return null;
+                roverResult.Message = "Plateau is empty";
+
+                return roverResult;
             }
 
-            if (string.IsNullOrEmpty(coordinateString) || string.IsNullOrWhiteSpace(coordinateString))
+            var locationCreateResult = CreateRoverLocation(plateau, coordinateString);
+
+            if (locationCreateResult.Location == null)
             {
-                return null;
+                roverResult.Message = locationCreateResult.Message;
+
+                return roverResult;
             }
 
-            var separatedValues = coordinateString.Split(' ');
+            roverResult.Rover = CreateRover(locationCreateResult.Location, plateau);
 
-            if (separatedValues.Length != 3)
-            {
-                return null;
-            }
-
-            if (!int.TryParse(separatedValues[0], out var xCoordinate))
-            {
-                return null;
-            }
-
-            if (!int.TryParse(separatedValues[1], out var yCoordinate))
-            {
-                return null;
-            }
-
-            if (xCoordinate < 0 || xCoordinate > plateau.X)
-            {
-                return null;
-            }
-
-            if (yCoordinate < 0 || yCoordinate > plateau.Y)
-            {
-                return null;
-            }
-
-            var headings =
-                Enum.GetValues(typeof(Heading))
-                    .Cast<Heading>()
-                    .ToArray();
-
-            var heading = headings.Where(x => x.GetCode() == separatedValues[2]).ToArray();
-
-            if (heading.Length != 1)
-            {
-                return null;
-            }
-
-            return CreateRover(xCoordinate, yCoordinate, heading[0], plateau);
+            return roverResult;
         }
 
-        public Rover CreateRover(int x, int y, Heading heading, Plateau plateau)
+        public Rover CreateRover(Location location, Plateau plateau)
         {
-            return new Rover(x, y, heading, plateau);
+            return new Rover(location, plateau);
         }
 
         public Rover ExecuteCommands(Rover rover)
@@ -147,7 +118,7 @@ namespace MarsRover.Services
                     {
                         var heading = headingService.TurnLeft();
 
-                        rover.Heading = heading;
+                        rover.Location.Heading = heading;
 
                         break;
                     }
@@ -156,7 +127,7 @@ namespace MarsRover.Services
                     {
                         var heading = headingService.TurnRight();
 
-                        rover.Heading = heading;
+                        rover.Location.Heading = heading;
 
                         break;
                     }
@@ -185,7 +156,7 @@ namespace MarsRover.Services
 
         private IHeadingService GetHeadingService(Rover rover)
         {
-            switch (rover.Heading)
+            switch (rover.Location.Heading)
             {
                 case Heading.North:
                     {
@@ -211,6 +182,86 @@ namespace MarsRover.Services
             return null;
         }
 
+        private LocationCreateResult CreateRoverLocation(Plateau plateau, string coordinateString)
+        {
+            var locationCreateResult = new LocationCreateResult();
+
+            if (string.IsNullOrEmpty(coordinateString) || string.IsNullOrWhiteSpace(coordinateString))
+            {
+                locationCreateResult.Message = "Coordinate string must be filled";
+
+                return locationCreateResult;
+            }
+
+            var separatedValues = coordinateString.Split(' ');
+
+            if (separatedValues.Length != 3)
+            {
+                locationCreateResult.Message = "Coordinate string must be includes x,y and heading";
+
+                return locationCreateResult;
+            }
+
+            if (!int.TryParse(separatedValues[0], out var xCoordinate))
+            {
+                locationCreateResult.Message = "Coordinate x is not valid";
+
+                return locationCreateResult;
+            }
+
+            if (!int.TryParse(separatedValues[1], out var yCoordinate))
+            {
+                locationCreateResult.Message = "Coordinate y is not valid";
+
+                return locationCreateResult;
+            }
+
+            if (xCoordinate < 0 || xCoordinate > plateau.X)
+            {
+                locationCreateResult.Message = "Coordinate x is out plateau";
+
+                return locationCreateResult;
+            }
+
+            if (yCoordinate < 0 || yCoordinate > plateau.Y)
+            {
+                locationCreateResult.Message = "Coordinate y is out plateau";
+
+                return locationCreateResult;
+            }
+
+            var heading = CreateHeading(separatedValues[2]);
+
+            if (heading == null)
+            {
+                locationCreateResult.Message = "Heading is not valid (N-S-E-W)";
+
+                return locationCreateResult;
+            }
+
+            locationCreateResult.Location = new Location(xCoordinate, yCoordinate, heading.Value);
+
+            return locationCreateResult;
+        }
+
+        private Heading? CreateHeading(string headingCode)
+        {
+            var headings =
+                Enum.GetValues(typeof(Heading))
+                    .Cast<Heading>()
+                    .ToArray();
+
+            var heading = headings.FirstOrDefault(x => x.GetCode() == headingCode);
+
+            return heading == Heading.NA ? null : (Heading?)heading;
+        }
+
         #endregion
+
+        private class LocationCreateResult
+        {
+            public Location Location { get; set; }
+            public string Message { get; set; }
+        }
     }
 }

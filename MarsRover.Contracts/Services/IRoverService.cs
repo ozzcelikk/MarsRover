@@ -5,8 +5,8 @@ namespace MarsRover.Contracts.Services
 {
     public interface IRoverService
     {
-        Rover CreateRover(string coordinateString, Plateau plateau);
-        Rover CreateRover(int x, int y, Heading heading, Plateau plateau);
+        RoverCreateResult CreateRover(string coordinateString, Plateau plateau);
+        Rover CreateRover(Location location, Plateau plateau);
         Rover ExecuteCommands(Rover rover);
         Command[] GetCommands(string commandString);
     }
