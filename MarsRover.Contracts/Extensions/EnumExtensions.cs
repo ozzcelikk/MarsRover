@@ -12,7 +12,7 @@ namespace MarsRover.Contracts.Extensions
             var attribute = @enum.GetType()
                 .GetMember(@enum.ToString())
                 .First()
-                .GetCustomAttribute<CommandAttribute>();
+                .GetCustomAttribute<CodeAttribute>();
 
             return attribute.Code;
         }

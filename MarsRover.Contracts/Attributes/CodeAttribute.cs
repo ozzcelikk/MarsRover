@@ -3,11 +3,11 @@
 namespace MarsRover.Contracts.Attributes
 {
     [AttributeUsage(AttributeTargets.Field)]
-    public class CommandAttribute : Attribute
+    public class CodeAttribute : Attribute
     {
         public string Code { get; }
 
-        public CommandAttribute(string code)
+        public CodeAttribute(string code)
         {
             Code = code;
         }
