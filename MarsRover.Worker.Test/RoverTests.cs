@@ -1,9 +1,9 @@
-﻿using MarsRover.Contracts.Models;
+﻿using MarsRover.Contracts.Enums;
+using MarsRover.Contracts.Models;
 using MarsRover.Contracts.Services;
 using MarsRover.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using MarsRover.Contracts.Enums;
 using Xunit;
 
 namespace MarsRover.Worker.Test
@@ -40,9 +40,9 @@ namespace MarsRover.Worker.Test
 
             var coordinateString = "12 E";
 
-            var rover = _roverService.CreateRover(coordinateString, plateau);
+            var roverCreateResult = _roverService.CreateRover(coordinateString, plateau);
 
-            Assert.Null(rover);
+            Assert.Null(roverCreateResult.Rover);
         }
 
         [Fact]
@@ -72,7 +72,9 @@ namespace MarsRover.Worker.Test
 
             var coordinateString = "1 2 E";
 
-            var rover = _roverService.CreateRover(coordinateString, plateau);
+            var roverCreateResult = _roverService.CreateRover(coordinateString, plateau);
+
+            var rover = roverCreateResult.Rover;
 
             var commandString = "MMRMLMLM";
 
@@ -90,7 +92,9 @@ namespace MarsRover.Worker.Test
 
             var coordinateString = "1 2 E";
 
-            var rover = _roverService.CreateRover(coordinateString, plateau);
+            var roverCreateResult = _roverService.CreateRover(coordinateString, plateau);
+
+            var rover = roverCreateResult.Rover;
 
             rover.Commands = null;
 
@@ -104,7 +108,9 @@ namespace MarsRover.Worker.Test
 
             var coordinateString = "3 1 E";
 
-            var rover = _roverService.CreateRover(coordinateString, plateau);
+            var roverCreateResult = _roverService.CreateRover(coordinateString, plateau);
+
+            var rover = roverCreateResult.Rover;
 
             var commandString = "L";
 
@@ -112,7 +118,7 @@ namespace MarsRover.Worker.Test
 
             _roverService.ExecuteCommands(rover);
 
-            Assert.Equal(Heading.North,rover.Heading);
+            Assert.Equal(Heading.North, rover.Location.Heading);
         }
 
         [Fact]
@@ -122,7 +128,9 @@ namespace MarsRover.Worker.Test
 
             var coordinateString = "1 2 N";
 
-            var rover = _roverService.CreateRover(coordinateString, plateau);
+            var roverCreateResult = _roverService.CreateRover(coordinateString, plateau);
+
+            var rover = roverCreateResult.Rover;
 
             var commandString = "LMLMLMLMM";
 
@@ -130,7 +138,7 @@ namespace MarsRover.Worker.Test
 
             _roverService.ExecuteCommands(rover);
 
-            var location = new Location(1, 3);
+            var location = new Location(1, 3, Heading.East);
 
             Assert.Equal(location.X, rover.Location.X);
             Assert.Equal(location.Y, rover.Location.Y);
