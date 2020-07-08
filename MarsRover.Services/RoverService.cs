@@ -188,7 +188,7 @@ namespace MarsRover.Services
 
             if (string.IsNullOrEmpty(coordinateString) || string.IsNullOrWhiteSpace(coordinateString))
             {
-                locationCreateResult.Message = "Coordinate string must be filled";
+                locationCreateResult.Message = "Coordinate string must be this format: 1 2 N";
 
                 return locationCreateResult;
             }
@@ -197,7 +197,7 @@ namespace MarsRover.Services
 
             if (separatedValues.Length != 3)
             {
-                locationCreateResult.Message = "Coordinate string must be includes x,y and heading";
+                locationCreateResult.Message = "Coordinate string must be includes x,y and heading value";
 
                 return locationCreateResult;
             }
