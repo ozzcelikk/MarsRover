@@ -81,7 +81,7 @@ namespace MarsRover.Worker
                 var roverIsReady = false;
                 var roverCommandsAreReady = false;
 
-                Console.WriteLine($"Enter {RoverList.Count + 1}.Rover coordinate");
+                Console.WriteLine($"Write {RoverList.Count + 1}.Rover coordinate");
 
                 while (!roverIsReady)
                 {
@@ -99,13 +99,13 @@ namespace MarsRover.Worker
                     {
                         roverIsReady = true;
 
-                        Console.WriteLine($"Enter {RoverList.Count + 1}.Rover directives");
+                        Console.WriteLine($"Write {RoverList.Count + 1}.Rover commands");
 
                         while (!roverCommandsAreReady)
                         {
-                            var roverDirectiveString = Console.ReadLine();
+                            var roverCommandString = Console.ReadLine();
 
-                            var roverCommands = _roverService.GetCommands(roverDirectiveString);
+                            var roverCommands = _roverService.GetCommands(roverCommandString);
 
                             if (roverCommands.Length == 0)
                             {
