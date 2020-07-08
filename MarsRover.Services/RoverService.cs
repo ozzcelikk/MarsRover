@@ -154,7 +154,7 @@ namespace MarsRover.Services
 
                 case Command.Right:
                     {
-                        var heading = headingService.TurnLeft();
+                        var heading = headingService.TurnRight();
 
                         rover.Heading = heading;
 
