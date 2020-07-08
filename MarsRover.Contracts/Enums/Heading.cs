@@ -4,6 +4,9 @@ namespace MarsRover.Contracts.Enums
 {
     public enum Heading
     {
+        [Code("N/A")]
+        NA = 0,
+
         [Code("N")]
         North = 1,
 
