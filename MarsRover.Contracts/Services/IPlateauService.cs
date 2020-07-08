@@ -1,8 +1,10 @@
-﻿namespace MarsRover.Contracts.Services
+﻿using MarsRover.Contracts.Models;
+
+namespace MarsRover.Contracts.Services
 {
     public interface IPlateauService
     {
-        Models.Plateau CreatePlateau(string coordinateString);
-        Models.Plateau CreatePlateau(int x, int y);
+        Plateau CreatePlateau(string coordinateString);
+        Plateau CreatePlateau(int x, int y);
     }
 }

@@ -1,10 +1,11 @@
 ﻿using MarsRover.Contracts.Services;
+using MarsRover.Contracts.Models;
 
 namespace MarsRover.Services
 {
     public class PlateauService : IPlateauService
     {
-        public Contracts.Models.Plateau CreatePlateau(string coordinateString)
+        public Plateau CreatePlateau(string coordinateString)
         {
             if (string.IsNullOrEmpty(coordinateString) || string.IsNullOrWhiteSpace(coordinateString))
             {
@@ -31,7 +32,7 @@ namespace MarsRover.Services
             return CreatePlateau(xCoordinate, yCoordinate);
         }
 
-        public Contracts.Models.Plateau CreatePlateau(int x, int y)
+        public Plateau CreatePlateau(int x, int y)
         {
             return new Contracts.Models.Plateau(x, y);
         }
