@@ -8,17 +8,17 @@ namespace MarsRover.Services
     {
         public Location Move(Location location)
         {
-            return new Location(location.X - 1, location.Y);
+            return new Location(location.X + 1, location.Y);
         }
 
         public Heading TurnRight()
         {
-            return Heading.South;
+            return Heading.North;
         }
 
         public Heading TurnLeft()
         {
-            return Heading.North;
+            return Heading.South;
         }
     }
 }

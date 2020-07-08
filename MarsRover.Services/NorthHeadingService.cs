@@ -13,12 +13,12 @@ namespace MarsRover.Services
 
         public Heading TurnRight()
         {
-            return Heading.West;
+            return Heading.East;
         }
 
         public Heading TurnLeft()
         {
-            return Heading.East;
+            return Heading.West;
         }
     }
 }
