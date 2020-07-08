@@ -9,7 +9,7 @@ namespace MarsRover.Contracts.Models
         public Heading Heading { get; set; }
         public Plateau Plateau { get; }
 
-        public CommandType[] CommandTypes { get; set; }
+        public Command[] Commands { get; set; }
         public List<RoverHistory> RoverHistory { get; set; }
 
         public Rover(int x, int y, Heading heading, Plateau plateau)
