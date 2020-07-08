@@ -66,14 +66,14 @@ namespace MarsRover.Services
 
         public Rover CreateRover(int x, int y, Heading heading, Plateau plateau)
         {
-            return new Contracts.Models.Rover(x, y, heading, plateau);
+            return new Rover(x, y, heading, plateau);
         }
 
-        public Rover ProcessCommands(Rover rover)
+        public Rover ExecuteCommands(Rover rover)
         {
             var count = 0;
 
-            foreach (var commandType in rover.CommandTypes)
+            foreach (var command in rover.Commands)
             {
                 count++;
 
@@ -84,7 +84,7 @@ namespace MarsRover.Services
                     break;
                 }
 
-                Move(rover, commandType);
+                Execute(rover, command);
 
                 rover.RoverHistory.Add(new RoverHistory
                 {
@@ -96,31 +96,31 @@ namespace MarsRover.Services
             return rover;
         }
 
-        public CommandType[] GetCommandTypes(string commandString)
+        public Command[] GetCommands(string commandString)
         {
-            var commandTypes =
-                Enum.GetValues(typeof(CommandType))
-                    .Cast<CommandType>()
+            var validCommands =
+                Enum.GetValues(typeof(Command))
+                    .Cast<Command>()
                     .ToArray();
 
-            var moveTypeCommands = commandTypes.Select(x => x.GetCode()).ToArray();
+            var commandCodes = validCommands.Select(x => x.GetCode()).ToArray();
 
             var separatedCommands = commandString.ToCharArray().Select(x => x.ToString()).ToArray();
 
-            var unsupportedCommands = separatedCommands.Distinct().Except(moveTypeCommands).ToArray();
+            var unsupportedCommands = separatedCommands.Distinct().Except(commandCodes).ToArray();
 
             if (unsupportedCommands.Length > 0)
             {
-                return new CommandType[0];
+                return new Command[0];
             }
 
-            var commands = new List<CommandType>();
+            var commands = new List<Command>();
 
             foreach (var command in separatedCommands)
             {
-                var moveType = commandTypes.First(x => x.GetCode() == command);
+                var commandEnum = validCommands.First(x => x.GetCode() == command);
 
-                commands.Add(moveType);
+                commands.Add(commandEnum);
             }
 
             return commands.ToArray();
@@ -128,13 +128,13 @@ namespace MarsRover.Services
 
         #region Helper Methods
 
-        private void Move(Rover rover, CommandType commandType)
+        private void Execute(Rover rover, Command commandType)
         {
             var headingService = GetHeadingService(rover);
 
             switch (commandType)
             {
-                case CommandType.Forward:
+                case Command.Forward:
                     {
                         var location = headingService.Move(rover.Location);
 
@@ -143,7 +143,7 @@ namespace MarsRover.Services
                         break;
                     }
 
-                case CommandType.Left:
+                case Command.Left:
                     {
                         var heading = headingService.TurnLeft();
 
@@ -152,7 +152,7 @@ namespace MarsRover.Services
                         break;
                     }
 
-                case CommandType.Right:
+                case Command.Right:
                     {
                         var heading = headingService.TurnLeft();
 
