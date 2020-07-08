@@ -4,16 +4,16 @@ namespace MarsRover.Contracts.Enums
 {
     public enum Heading
     {
-        [Command("N")]
+        [Code("N")]
         North = 1,
 
-        [Command("S")]
+        [Code("S")]
         South = 2,
 
-        [Command("E")]
+        [Code("E")]
         East = 3,
 
-        [Command("W")]
+        [Code("W")]
         West = 4
     }
 }

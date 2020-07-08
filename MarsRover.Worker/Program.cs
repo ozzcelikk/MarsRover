@@ -10,14 +10,14 @@ namespace MarsRover.Worker
 {
     public class Program
     {
-        #region Processor
+        #region Services
 
         private static IPlateauService _plateauService;
         private static IRoverService _roverService;
 
         #endregion
 
-        public static int RoverCount => 2;
+        public static int MaxRoverCount => 1;
 
         static void Main(string[] args)
         {
@@ -53,7 +53,7 @@ namespace MarsRover.Worker
 
                     if (plateau == null)
                     {
-                        Console.WriteLine("Please enter valid values like \"3 3\"");
+                        Console.WriteLine("Please enter valid coordinate values like this template: \"3 3\"");
                     }
                 }
 
@@ -61,14 +61,14 @@ namespace MarsRover.Worker
 
                 #region Rover
 
-                while (rovers.Count != RoverCount)
+                while (rovers.Count != MaxRoverCount)
                 {
-                    var currentRoverIsValid = false;
-                    var currentCommandsAreValid = false;
+                    var roverIsReady = false;
+                    var roverCommandsAreReady = false;
 
                     Console.WriteLine($"Enter {rovers.Count + 1}.Rover coordinate");
 
-                    while (!currentRoverIsValid)
+                    while (!roverIsReady)
                     {
                         var roverCoordinateString = Console.ReadLine();
 
@@ -76,29 +76,29 @@ namespace MarsRover.Worker
 
                         if (currentRover == null)
                         {
-                            Console.WriteLine($"Please enter {rovers.Count + 1}.Rover valid values like \"1 2 N\"");
+                            Console.WriteLine($"Please enter {rovers.Count + 1}.Rover valid values like this template: \"1 2 N\"");
                         }
                         else
                         {
-                            currentRoverIsValid = true;
+                            roverIsReady = true;
 
                             Console.WriteLine($"Enter {rovers.Count + 1}.Rover directives");
 
-                            while (!currentCommandsAreValid)
+                            while (!roverCommandsAreReady)
                             {
                                 var roverDirectiveString = Console.ReadLine();
 
-                                var commandTypes = _roverService.GetCommandTypes(roverDirectiveString);
+                                var roverCommands = _roverService.GetCommands(roverDirectiveString);
 
-                                if (commandTypes.Length == 0)
+                                if (roverCommands.Length == 0)
                                 {
-                                    Console.WriteLine($"Please enter {rovers.Count + 1}.Rover valid values like \"MLRRMLMM\"");
+                                    Console.WriteLine($"Please enter {rovers.Count + 1}.Rover valid command values like this template: \"MLRRMLMM\"");
                                 }
                                 else
                                 {
-                                    currentCommandsAreValid = true;
+                                    roverCommandsAreReady = true;
 
-                                    currentRover.CommandTypes = commandTypes;
+                                    currentRover.Commands = roverCommands;
 
                                     rovers.Add(currentRover);
                                 }
@@ -115,7 +115,7 @@ namespace MarsRover.Worker
                 {
                     count++;
 
-                    _roverService.ProcessCommands(rover);
+                    _roverService.ExecuteCommands(rover);
 
                     Console.WriteLine($"{count}. Rover => {rover.Location.X} {rover.Location.Y} {rover.Heading.GetCode()}");
                 }

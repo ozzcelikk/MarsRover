@@ -2,15 +2,15 @@
 
 namespace MarsRover.Contracts.Enums
 {
-    public enum CommandType
+    public enum Command
     {
-        [Command("M")]
+        [Code("M")]
         Forward = 1,
 
-        [Command("L")]
+        [Code("L")]
         Left = 2,
 
-        [Command("R")]
+        [Code("R")]
         Right = 3
     }
 }
